@@ -1,5 +1,5 @@
-from llexer import LLexer
-from lparser import LParser
+from Classes import LLexer
+from Classes import LParser
 
 if __name__ == "__main__":
     lexer = LLexer()
