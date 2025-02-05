@@ -1,6 +1,6 @@
 import sys
-import LToken
-import LLexer
+from LToken import LToken
+from LLexer import LLexer
 
 class LParser:
 
@@ -21,7 +21,18 @@ class LParser:
             self.error()
 
     def statements(self):
-        pass
+        
+        if self.curr_token == LToken.END:
+            return
+        
+        else:
+            self.statement()
+
+            if self.curr_token.token_code == LToken.SEMICOL:
+                self.next_token()
+                self.statements()
+            else:
+                self.error()
 
     def statement(self):
         pass

@@ -1,5 +1,5 @@
 import sys
-import LToken
+from LToken import LToken
 
 
 class LLexer:
