@@ -43,8 +43,6 @@ class LLexer:
 
             return LToken(lexeme, LToken.INT)
         
-
-        #Check for operators and special characters.
         if character == "=":
             return LToken(character, LToken.ASSIGN)
         elif character == ";":
@@ -83,6 +81,7 @@ class LLexer:
             
 
 
+        #Check for operators and special characters.
         
 
         #If input is incorrect, return error token.
