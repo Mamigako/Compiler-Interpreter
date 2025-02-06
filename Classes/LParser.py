@@ -35,7 +35,23 @@ class LParser:
                 self.error()
 
     def statement(self):
-        pass
+        self.next_token()
+        if self.curr_token.token_code == LToken.ID:
+            self.next_token()
+            if self.curr_token.token_code == LToken.ASSIGN:
+                self.expr()
+            else:
+                self.error()
+
+        elif self.curr_token.token_code == LToken.PRINT:
+            self.next_token()
+            if self.curr_token.token_code == LToken.ID:
+                sys.stdout.write(f"PUSH {self.curr_token.lexeme}");
+                sys.stdout.write("PRINT");
+                return
+
+            else:
+                self.error()
 
     def expr(self):
         pass
