@@ -10,6 +10,15 @@ class SInterpreter:
         #performs the fetch-decode-execute cycle
         pass
 
+    def fetch():
+        pass
+
+    def decode():
+        pass
+
+    def execute():
+        pass
+
 
 
 
