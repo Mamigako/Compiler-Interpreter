@@ -4,6 +4,7 @@ from LToken import LToken
 
 class LLexer:
 
+    
 
     def __init__(self):
         #Regex patterns for reference, probably wont need them.
@@ -11,24 +12,45 @@ class LLexer:
         self.ID_PATTERN = "[A-Za-z]+"
         self.END_PATTERN = "end"
         self.PRINT_PATTERN = "print"
+        self.next_operator = None
+        self.current_token = None
 
 
 
     def get_next_token(self):
 
-        """Read single characters from stdin and return token based on specifications."""
+        if self.next_operator is None:
+            character = sys.stdin.read(1)
+        else:
+            # If the next_operator is a whitespace, ignore it and get the next token.
+            if self.next_operator.isspace():
+                self.next_operator = None
+                return self.get_next_token()
 
-
-        character = sys.stdin.read(1)
-
+            if self.next_operator == "=":
+                self.current_token = LToken("=", LToken.ASSIGN)
+            elif self.next_operator == ";":
+                self.current_token = LToken(";", LToken.SEMICOL)
+            elif self.next_operator == "+":
+                self.current_token = LToken("+", LToken.PLUS)
+            elif self.next_operator == "-":
+                self.current_token = LToken("-", LToken.MINUS)
+            elif self.next_operator == "*":
+                self.current_token = LToken("*", LToken.MULT) 
+            elif self.next_operator == "(":
+                self.current_token = LToken("(", LToken.LPAREN)
+            elif self.next_operator == ")":
+                self.current_token = LToken(")", LToken.RPAREN)
+        
+            self.next_operator = None
+            return self.current_token
 
         # Handle whitespace.
         while character and character.isspace():
             character = sys.stdin.read(1)
-
             if not character:
-                return None
-        
+                return
+
 
         #If character is a number.
         if character.isdigit():
@@ -36,13 +58,12 @@ class LLexer:
 
             while True:
                 next_character = sys.stdin.read(1)
-
-                if not next_character or not next_character.isdigit():
-                    break
-                lexeme += next_character
-
-            return LToken(lexeme, LToken.INT)
-        
+                
+                if not next_character.isdigit():
+                    self.next_operator = next_character
+                    return LToken(lexeme, LToken.INT)
+                else:
+                    lexeme += next_character
 
         #Check for operators and special characters.
         if character == "=":
@@ -64,15 +85,16 @@ class LLexer:
         if character.isalpha():
             lexeme = character
 
-
             while True:
                 next_character = sys.stdin.read(1)
             
-                if not next_character or not next_character.isalpha():
+                if not next_character.isalpha():
+                    self.next_operator = next_character
                     break
-
-                lexeme += next_character
+                else:
+                    lexeme += next_character
             
+
             #Check for "print" and "end".
             if lexeme == "print":
                 return LToken(lexeme, LToken.PRINT)
@@ -82,12 +104,8 @@ class LLexer:
                 return LToken(lexeme, LToken.ID)
             
 
-
-        
-
         #If input is incorrect, return error token.
         return self.error()
-
 
 
     def error(self):
