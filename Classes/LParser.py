@@ -50,7 +50,7 @@ class LParser:
         
             if self.curr_token.token_code == LToken.ID:
                 sys.stdout.write("PUSH " + self.curr_token.lexeme + "\n")
-                self.next_token()  
+                self.next_token()  #TODO: Check if there was no semi-colon after the print
                 sys.stdout.write("PRINT" + "\n")
             else:
                 self.error()

@@ -20,13 +20,11 @@ class SInterpreter:
 
 
     def fetch(self):
-
-        operation = sys.stdin.readline()
-        return operation
+        next_line = sys.stdin.readline()
+        return next_line
     
 
     def decode(self, next_line):
-
         if "PUSH" in next_line:
 
             next_line = next_line[5:]
@@ -51,13 +49,36 @@ class SInterpreter:
         match operation:
             case "PUSH":
                 return
+            
             case "ADD":
+                first_num = self.stack.pop()
+                second_num = self.stack.pop()
+                result = first_num + second_num
+                self.stack.append(result)
                 return
+            
             case "MULT":
+                first_num = self.stack.pop()
+                second_num = self.stack.pop()
+                result = first_num * second_num
+                self.stack.append(result)
                 return
+
+            case "UMINUS":
+                #self.stack[len(self.stack) - 1] = - self.stack[len(self.stack) - 1]
+                last_number = self.stack.pop()
+                self.stack.append(-last_number)
+                return
+            
             case "ASSIGN":
+                value = self.stack.pop()
+                variable = self.stack.pop()
+                self.values[variable] = value
                 return
+            
             case "PRINT":
+                last_element = self.stack.pop()
+                sys.stdout.write(f"{last_element}")
                 return
 
 
