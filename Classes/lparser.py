@@ -1,19 +1,27 @@
 import sys
-from LToken import LToken
-from LLexer import LLexer
+from ltoken import LToken
 
 class LParser:
-
+    """
+    This class parses the program based on the following grammar of language L using a recursive-descent approach:
+    - Statements -> Statement ; Statements | end 
+    - Statement -> id = Expr | print id 
+    - Expr- > Term | Term + Expr  
+    - Term -> Factor | Factor * Term 
+    - Factor -> int | id | - Factor | ( Expr ) 
+    """
 
     def __init__(self, lexer):
         self.curr_token = None
         self.lexer = lexer
+
 
     def parse(self): 
         self.next_token() 
         self.statements() 
         sys.stdout.write("\n")
  
+
     def next_token(self): 
         self.curr_token = self.lexer.get_next_token() 
         if self.curr_token is None:
@@ -21,14 +29,8 @@ class LParser:
         if self.curr_token.token_code == LToken.ERROR:  # lexical error 
             self.error()
 
+
     def statements(self):
-
-
-        #Statements -> Statement ; Statements | end 
-        #Statement -> id = Expr | print id 
-        #Expr- > Term | Term + Expr  
-        #Term -> Factor | Factor * Term 
-        #Factor -> int | id | - Factor | ( Expr ) 
 
         # Production: Statements -> Statement ; Statements | end
         if self.curr_token.token_code == LToken.END:
@@ -43,6 +45,7 @@ class LParser:
             else:
                 self.error() 
 
+
     def statement(self):
 
         if self.curr_token.token_code == LToken.PRINT:
@@ -50,7 +53,7 @@ class LParser:
         
             if self.curr_token.token_code == LToken.ID:
                 sys.stdout.write("PUSH " + self.curr_token.lexeme + "\n")
-                self.next_token()  #TODO: Check if there was no semi-colon after the print
+                self.next_token()
                 sys.stdout.write("PRINT" + "\n")
             else:
                 self.error()
@@ -69,6 +72,7 @@ class LParser:
         else:
             self.error()
 
+
     def expr(self):
         # Production: Expr -> Term | Term + Expr
         self.term()
@@ -78,6 +82,7 @@ class LParser:
             self.expr()      
             sys.stdout.write("ADD" + "\n")
 
+
     def term(self):
         # Production: Term -> Factor | Factor * Term
         self.factor()
@@ -86,6 +91,7 @@ class LParser:
             self.next_token()  
             self.term()      
             sys.stdout.write("MULT" + "\n")
+
 
     def factor(self):
         # Production: Factor -> int | id | - Factor | ( Expr )
@@ -114,7 +120,8 @@ class LParser:
         else:
             self.error()
 
+
     def error(self):
-        sys.stdout.write("Syntax error." + "\n")
+        sys.stdout.write("Syntax error" + "\n")
         sys.exit()
 
